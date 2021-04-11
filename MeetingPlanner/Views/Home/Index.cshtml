@@ -1,0 +1,140 @@
+﻿@model MeetingPlanner.Core.Models.Calendar
+
+
+@{
+    ViewData["Title"] = "Planowanie";
+}
+
+<h1 class="mb-3">Planuj spotkanie</h1>
+
+<div class="row">
+    <div class="col-4">
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserPlanns.First(x => x.Id == 0).Name)
+            @Html.TextBoxFor(x => x.UserPlanns.First(x => x.Id == 0).Name,
+           new { @class = "form-control", autofocus = "autofocus" })
+            @Html.ValidationMessageFor(x => x.UserPlanns.First(x => x.Id == 0).Name)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserPlanns.First(x => x.Id == 0).WorkStart)
+            @Html.TextBoxFor(x => x.UserPlanns.First(x => x.Id == 0).WorkStart, "{0:HH:mm}",
+           new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserPlanns.First(x => x.Id == 0).WorkStart)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserPlanns.First(x => x.Id == 0).WorkEnd)
+            @Html.TextBoxFor(x => x.UserPlanns.First(x => x.Id == 0).WorkEnd, "{0:HH:mm}",
+           new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserPlanns.First(x => x.Id == 0).WorkEnd)
+        </div>
+        <button class="btn btn-primary mt-2 mb-3"
+                onclick='window.location.href="@Url.Action("Meeting","Home", new { userId = 0 })"'>
+            Dodaj spotkanie
+        </button>
+    </div>
+    <div class="col-4">
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserPlanns.First(x => x.Id == 1).Name)
+            @Html.TextBoxFor(x => x.UserPlanns.First(x => x.Id == 1).Name,
+           new { @class = "form-control", autofocus = "autofocus" })
+            @Html.ValidationMessageFor(x => x.UserPlanns.First(x => x.Id == 1).Name)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserPlanns.First(x => x.Id == 1).WorkStart)
+            @Html.TextBoxFor(x => x.UserPlanns.First(x => x.Id == 1).WorkStart, "{0:HH:mm}",
+           new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserPlanns.First(x => x.Id == 1).WorkStart)
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(x => x.UserPlanns.First(x => x.Id == 1).WorkEnd)
+            @Html.TextBoxFor(x => x.UserPlanns.First(x => x.Id == 1).WorkEnd, "{0:HH:mm}",
+           new { @class = "form-control" })
+            @Html.ValidationMessageFor(x => x.UserPlanns.First(x => x.Id == 1).WorkEnd)
+        </div>
+        <button class="btn btn-primary mt-2 mb-3"
+                onclick='window.location.href="@Url.Action("Meeting","Home", new { userId = 1 })"'>
+            Dodaj spotkanie
+        </button>
+    </div>
+</div>
+<h3>Spotkania</h3>
+<div class="row">
+    <div class="col-4">
+        <table class="table">
+            <tbody>
+
+                    @foreach (var item in Model.UserPlanns.First(x => x.Id == 0).Meetings)
+                    {
+                        <tr>
+                            <td>@item.Name: @item.Start.ToString("HH:mm")-@item.End.ToString("HH:mm")</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm"
+                                        onclick="deleteMeeting('@item.Id', this)">
+                                    Usuń
+                                </button>
+                            </td>
+                        </tr>
+
+                    }
+            </tbody>
+        </table>
+    </div>
+    <div class="col-4">
+        <table class="table">
+            <tbody>
+                    @foreach (var item in Model.UserPlanns.First(x => x.Id == 1).Meetings)
+                    {
+                        <tr>
+                            <td>@item.Name: @item.Start.ToString("HH:mm")-@item.End.ToString("HH:mm")</td>
+                            <td>
+                                <button class="btn btn-danger btn-sm"
+                                        onclick="deleteMeeting('@item.Id', this)">
+                                    Usuń
+                                </button>
+                        </tr>
+                    }
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+@section Scripts
+{
+    <script typr="text/javascript">
+        function deleteMeeting(id, btn)
+        {
+            if (!confirm("Czy napewno chcesz usunąć spotkanie?"))
+                return;
+
+            $.ajax({
+
+                type: 'POST',
+                url: "@Url.Action("Delete", "Home")",
+                data: {
+                    id: id
+                },
+                success: function (data) {
+                    if (data.Success) {
+                        var row = btn.parentNode.parentNode;
+                        row.parentNode.removeChild(row)
+                    } else {
+                        alert(data.Message);
+                    }
+                },
+                error: function (data) {
+                    alert(data.Message);
+                },
+                dataType: 'json'
+
+                });
+        }
+    </script>
+}
+
+
+

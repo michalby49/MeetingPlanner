@@ -1,0 +1,51 @@
+﻿@model MeetingPlanner.Core.Models.Meeting
+@{
+    ViewData["Title"] = "Spotkanie";
+}
+
+<h1>Dodaj spotkanie</h1>
+
+@using (Html.BeginForm("Plan", "Home"))
+{
+    <p class="alert alert-info mt-4 mb-4">
+        Nazwa, rozpoczęcie i zkończenie spotkania jest
+        <strong>wymagane</strong>.
+    </p>
+
+    @Html.HiddenFor(x => x.Id)
+
+    <div class="row">
+
+        <div class=" set-5">
+            <div class="form-group">
+                @Html.LabelFor(x => x.Name)
+                @Html.TextBoxFor(x => x.Name,
+               new { @class = "form-control", autofocus = "autofocus" })
+                @Html.ValidationMessageFor(x => x.Name)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.Start)
+                @Html.TextBoxFor(x => x.Start, "{0:HH:mm}",
+               new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.Start)
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(x => x.End)
+                @Html.TextBoxFor(x => x.End, "{0:HH:mm}",
+               new { @class = "form-control" })
+                @Html.ValidationMessageFor(x => x.End)
+            </div>
+
+            <button class="btn btn-primary btn-lg mb-5 mt-3"
+                    type="submit"
+                    @*onclick='window.location.href="@Url.Action("Meeting","Home", new { userPlannId =  })"'*@
+                    >
+                Zapisz
+            </button>
+        </div>
+    </div>
+}
+
+
